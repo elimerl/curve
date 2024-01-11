@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<root>
+	<element>
+		<description>elimerl's fvd export</description>
+		<vertex>
+			<x>0.00000</x>
+			<y>0.00000</y>
+			<z>0.00000</z>
+			<strict>true</strict>
+		</vertex>
+		<vertex>
+			<x>10.00000</x>
+			<y>5.00000</y>
+			<z>0.00000</z>
+			<strict>true</strict>
+		</vertex>
+		<vertex>
+			<x>20.00000</x>
+			<y>0.00000</y>
+			<z>0.00000</z>
+			<strict>true</strict>
+		</vertex>
+		<roll>
+			<ux>0</ux>
+			<uy>1</uy>
+			<uz>0</uz>
+			<rx>1</rx>
+			<ry>0</ry>
+			<rz>0</rz>
+			<coord>0</coord>
+		</roll>
+		<roll>
+			<ux>0</ux>
+			<uy>1</uy>
+			<uz>0</uz>
+			<rx>1</rx>
+			<ry>0</ry>
+			<rz>0</rz>
+			<coord>0</coord>
+		</roll>
+		<roll>
+			<ux>-1</ux>
+			<uy>0</uy>
+			<uz>0</uz>
+			<rx>0</rx>
+			<ry>1</ry>
+			<rz>0 </rz>
+			<coord>0.5125</coord>
+			<strict>true</strict>
+		</roll>
+		<roll>
+			<ux>0</ux>
+			<uy>1</uy>
+			<uz>0</uz>
+			<rx>1</rx>
+			<ry>0</ry>
+			<rz>0</rz>
+			<coord>1</coord>
+		</roll>
+	</element>
+</root>
