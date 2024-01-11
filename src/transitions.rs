@@ -24,6 +24,9 @@ impl Transitions {
         }
         None
     }
+    pub fn length(&self) -> f32 {
+        self.transitions.iter().map(|v| v.length).sum()
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
