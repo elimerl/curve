@@ -5,7 +5,7 @@ use xmlwriter::XmlWriter;
 
 #[derive(Debug)]
 pub struct TrackSpline {
-    pub points: Vec<(Vec3, f32)>, // pos, forward, roll
+    pub points: Vec<(Vec3, Quat)>, // pos, orientation
 }
 
 impl TrackSpline {
@@ -20,7 +20,7 @@ impl TrackSpline {
             .sum()
     }
 
-    pub fn evaluate(&self, t: f32) -> Option<(Vec3, f32)> {
+    pub fn evaluate(&self, t: f32) -> Option<(Vec3, Quat)> {
         if self.points.len() < 2 {
             return None; // Need at least 2 points for a spline
         }
@@ -41,10 +41,7 @@ impl TrackSpline {
                 start.0.z + t_in_segment * (end.0.z - start.0.z),
             );
 
-            Some((
-                interpolated_point,
-                start.1 + t_in_segment * (end.1 - start.1),
-            ))
+            Some((interpolated_point, start.1.slerp(end.1, t_in_segment)))
         } else {
             None
         }
@@ -64,7 +61,7 @@ impl TrackSpline {
         w.start_element("description");
         w.write_text("elimerl's fvd export");
         w.end_element();
-        for point in &self.points {
+        for point in self.points.iter() {
             w.start_element("vertex");
             w.start_element("x");
             w.write_text_fmt(format_args!("{:.5}", point.0.x));
@@ -81,18 +78,14 @@ impl TrackSpline {
             w.end_element();
         }
         let mut length_so_far = 0.;
-        for points in self.points.windows(2).chain(std::iter::once(
-            &[
-                self.points[self.points.len() - 1],
-                self.points[self.points.len() - 1],
-            ][..],
-        )) {
+        for (i, points) in self.points.windows(2).enumerate() {
             let point = points[0];
             let next_point = points[1];
+
             w.start_element("roll");
-            let quat = Quat::from_euler(glam::EulerRot::XYZ, 0., 0., point.1);
-            let right = quat * Vec3::X;
-            let up = quat * Vec3::Y;
+
+            let up = point.1 * Vec3::Y;
+            let right = point.1 * Vec3::Z;
 
             w.start_element("ux");
             w.write_text_fmt(format_args!("{:.5}", up.x));
@@ -123,7 +116,6 @@ impl TrackSpline {
             w.end_element();
 
             w.end_element();
-
             length_so_far += (next_point.0 - point.0).length();
         }
         w.end_document()
