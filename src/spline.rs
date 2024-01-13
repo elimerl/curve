@@ -3,6 +3,11 @@ use std::iter;
 use glam::{Quat, Vec3};
 use xmlwriter::XmlWriter;
 
+use crate::{
+    fvd::{RIGHT, UP},
+    units::m_to_ft_vec3,
+};
+
 #[derive(Debug)]
 pub struct TrackSpline {
     pub points: Vec<(Vec3, Quat)>, // pos, orientation
@@ -62,15 +67,17 @@ impl TrackSpline {
         w.write_text("elimerl's fvd export");
         w.end_element();
         for point in self.points.iter() {
+            let pos = m_to_ft_vec3(point.0);
+
             w.start_element("vertex");
             w.start_element("x");
-            w.write_text_fmt(format_args!("{:.5}", point.0.x));
+            w.write_text_fmt(format_args!("{:.5}", pos.x));
             w.end_element();
             w.start_element("y");
-            w.write_text_fmt(format_args!("{:.5}", point.0.y));
+            w.write_text_fmt(format_args!("{:.5}", pos.y));
             w.end_element();
             w.start_element("z");
-            w.write_text_fmt(format_args!("{:.5}", point.0.z));
+            w.write_text_fmt(format_args!("{:.5}", pos.z));
             w.end_element();
             w.start_element("strict");
             w.write_text("false");
@@ -84,8 +91,8 @@ impl TrackSpline {
 
             w.start_element("roll");
 
-            let up = point.1 * Vec3::Y;
-            let right = point.1 * Vec3::Z;
+            let up = point.1 * UP;
+            let right = -(point.1 * RIGHT);
 
             w.start_element("ux");
             w.write_text_fmt(format_args!("{:.5}", up.x));

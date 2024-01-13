@@ -6,40 +6,49 @@ use crate::spline::TrackSpline;
 mod fvd;
 mod spline;
 mod transitions;
+mod units;
 
 fn main() {
     let mut vertical = Transitions::new(1.);
     vertical.transitions.push(Transition::new(
         transitions::TransitionFunction::Plateau,
-        -1.,
-        2.,
-    ));
-
-    vertical.transitions.push(Transition::new(
-        transitions::TransitionFunction::Cubic,
-        2.5,
+        -2.,
         1.,
     ));
 
     vertical.transitions.push(Transition::new(
         transitions::TransitionFunction::Cubic,
+        2.,
+        0.5,
+    ));
+    vertical.transitions.push(Transition::new(
+        transitions::TransitionFunction::Cubic,
         0.,
-        5.,
+        2.,
+    ));
+
+    vertical.transitions.push(Transition::new(
+        transitions::TransitionFunction::Plateau,
+        -2.5,
+        2.,
     ));
 
     let mut roll_rate = Transitions::new(0.);
+
     roll_rate.transitions.push(Transition::new(
-        transitions::TransitionFunction::Cubic,
+        transitions::TransitionFunction::Plateau,
         0.,
-        23.,
+        10.,
     ));
 
-    dbg!(vertical.interpolate(0.));
-    dbg!(vertical.interpolate(3.));
+    // roll_rate.transitions.push(Transition::new(
+    //     transitions::TransitionFunction::Plateau,
+    //     200.,
+    //     4.,
+    // ));
 
     println!(
         "{}",
-        fvd::create_spline(&vertical, &roll_rate, Vec3::new(0., 10., 0.), 10.)
-            .to_nolimits_element()
+        fvd::create_spline(&vertical, &roll_rate, Vec3::new(0., 20., 0.), 5.).to_nolimits_element()
     );
 }
