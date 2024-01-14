@@ -11,3 +11,5 @@ pub fn m_to_ft_vec3(pos: Vec3) -> Vec3 {
 pub fn mps_to_miph(velocity: f32) -> f32 {
     velocity * 2.2369363
 }
+
+pub const G: f32 = 9.806;

@@ -1,5 +1,3 @@
-use std::iter;
-
 use glam::{Quat, Vec3};
 use xmlwriter::XmlWriter;
 
@@ -8,7 +6,9 @@ use crate::{
     units::m_to_ft_vec3,
 };
 
-#[derive(Debug)]
+pub const INTERVAL: f32 = 0.3; // m between exported points
+
+#[derive(Debug, Clone)]
 pub struct TrackSpline {
     pub points: Vec<(Vec3, Quat)>, // pos, orientation
 }
@@ -53,6 +53,14 @@ impl TrackSpline {
     }
 
     pub fn to_nolimits_element(&self) -> String {
+        let mut export_points = Vec::new();
+        let mut interval = 0.;
+        for points in self.points.windows(2) {
+            interval += (points[0].0 - points[1].0).length();
+            if interval > INTERVAL {
+                export_points.push(points[0]);
+            }
+        }
         let opt = xmlwriter::Options {
             indent: xmlwriter::Indent::None,
             ..xmlwriter::Options::default()
@@ -66,7 +74,7 @@ impl TrackSpline {
         w.start_element("description");
         w.write_text("elimerl's fvd export");
         w.end_element();
-        for point in self.points.iter() {
+        for (i, point) in self.points.iter().enumerate() {
             let pos = m_to_ft_vec3(point.0);
 
             w.start_element("vertex");
@@ -80,12 +88,12 @@ impl TrackSpline {
             w.write_text_fmt(format_args!("{:.5}", pos.z));
             w.end_element();
             w.start_element("strict");
-            w.write_text("false");
+            w.write_text_fmt(format_args!("{}", i == 0 || i == self.points.len() - 1));
             w.end_element();
             w.end_element();
         }
         let mut length_so_far = 0.;
-        for (i, points) in self.points.windows(2).enumerate() {
+        for points in self.points.windows(2) {
             let point = points[0];
             let next_point = points[1];
 
