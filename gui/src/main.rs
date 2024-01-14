@@ -153,11 +153,11 @@ fn main() {
             |gui_context| {
                 SidePanel::left("side_panel")
                     .resizable(true)
-                    .show(gui_context, |ui| ui.heading("How to become gyat"));
+                    .show(gui_context, |ui| ui.heading("Test"));
                 TopBottomPanel::bottom("bottom_panel")
                     .resizable(true)
                     .show(gui_context, |ui| {
-                        ui.heading("How to become gyat");
+                        ui.heading("Transition Graph");
                         Plot::new("plot").show(ui, |plot| plot.vline(VLine::new(1.)));
                     });
             },
