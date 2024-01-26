@@ -35,7 +35,13 @@ impl FullTransition {
 impl Default for FullTransition {
     fn default() -> Self {
         let default = Transition::new(TransitionFunction::Cubic, 0.);
-        Self::new(default, default, default, 1., None)
+        Self::new(
+            default,
+            default,
+            Transition::new(TransitionFunction::Plateau, 0.),
+            1.,
+            None,
+        )
     }
 }
 
